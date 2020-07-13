@@ -60,11 +60,5 @@ public class ArrayStorage {
         System.out.println("Элемента с id " + uuid + "- нет в массиве");
     }
 
-    // Индексатор для вывода storage
-    public Resume getStorageElement(int index) {
-        if (storage[index] != null) {
-            return storage[index];
-        }
-        return null;
-    }
+
 }
