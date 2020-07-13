@@ -2,7 +2,7 @@ public class ArrayStorage {
     Resume[] storage = new Resume[10000];
     int size;   //Количестов резюме в массиве
 
-    public int getSize() {
+    public int size() {
         return size;
     }
 

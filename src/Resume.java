@@ -4,7 +4,7 @@ public class Resume {
     String uuid;
 
     public Resume() {
-        uuid = UUID.randomUUID().toString();
+
     }
 
     public String getUuid() {
@@ -13,6 +13,6 @@ public class Resume {
 
     @Override
     public String toString() {
-        return "id: " + uuid;
+        return uuid;
     }
 }

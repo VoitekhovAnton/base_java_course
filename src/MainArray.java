@@ -1,131 +1,71 @@
-import java.io.IOException;
-import java.util.Scanner;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
+
+/**
+ * Interactive test for ArrayStorage implementation
+ * (just run, no need to understand)
+ */
 public class MainArray {
+    private final static ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 
-    static public int NaturalNumberRange(int down, int up) {
-
-        int num = 0;
-        boolean ok = true;
-        do {
-            Scanner in = new Scanner(System.in);
-            if (in.hasNextInt()) {
-                num = in.nextInt();
-                ok = true;
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        Resume r;
+        while (true) {
+            System.out.print("Введите одну из команд - (list | save uuid | delete uuid | get uuid | clear | exit): ");
+            String[] params = reader.readLine().trim().toLowerCase().split(" ");
+            if (params.length < 1 || params.length > 2) {
+                System.out.println("Неверная команда.");
+                continue;
             }
-            if (num < down || num > up) {
-                ok = false;
+            String uuid = null;
+            if (params.length == 2) {
+                uuid = params[1].intern();
             }
-
-        } while (ok == false);
-        return num;
-    }
-
-    static public int NaturalNum() {
-
-        int num = 0;
-        boolean ok = true;
-        do {
-            Scanner in = new Scanner(System.in);
-            if (in.hasNextInt()) {
-                num = in.nextInt();
-                ok = true;
+            switch (params[0]) {
+                case "list":
+                    printAll();
+                    break;
+                case "size":
+                    System.out.println(ARRAY_STORAGE.size());
+                    break;
+                case "save":
+                    r = new Resume();
+                    r.uuid = uuid;
+                    ARRAY_STORAGE.save(r);
+                    printAll();
+                    break;
+                case "delete":
+                    ARRAY_STORAGE.delete(uuid);
+                    printAll();
+                    break;
+                case "get":
+                    System.out.println(ARRAY_STORAGE.get(uuid));
+                    break;
+                case "clear":
+                    ARRAY_STORAGE.clear();
+                    printAll();
+                    break;
+                case "exit":
+                    return;
+                default:
+                    System.out.println("Неверная команда.");
+                    break;
             }
-
-        } while (ok == false);
-        return num;
-    }
-
-    static public void ShowStorage(ArrayStorage storage) {
-        for (int i = 0; i < storage.size; i++) {
-            System.out.println(storage.getStorageElement(i).toString());
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        ArrayStorage ResumeArr = null;
-        int choice = 0; // Переменная для выбора меню
-        Scanner in = new Scanner(System.in); // для ввода данных с клавиатуры
-        do {
-            System.out.println("1. Создать массив резюме с произвольной длинной\n2. Добавить элемент\n3. Удалить элемент\n4. Удалить массив\n5. Вывести массив\n6. Получение элемента из массива\n7. Выход");
-            choice = NaturalNumberRange(1, 7);
-            switch (choice) {
-                case (1): // Создание
-                    ResumeArr = new ArrayStorage();
-                    MainTestArrayStorage.CreateStorage(5, ResumeArr);
-                    ShowStorage(ResumeArr);
-
-                    break;
-
-                case (2): // Добавление
-                    if (ResumeArr.size != 0 && ResumeArr != null) {
-                        Resume r = new Resume();
-                        ResumeArr.save(r);
-                        ShowStorage(ResumeArr);
-                    } else {
-                        System.out.println("Массив не создан");
-                    }
-                    break;
-
-                case (3):// Удаление элемента
-                    if (ResumeArr.size != 0 && ResumeArr != null) {
-                        System.out.println("Введите id элемента");
-                        ResumeArr.delete(in.nextLine());
-                    } else {
-                        System.out.println("Массив удалён");
-                    }
-
-                    break;
-
-                case (4): // Удаление массива из памяти
-                    if (ResumeArr.size != 0 && ResumeArr != null) {
-                        System.out.println("Массив не создан");
-                    } else {
-                        ResumeArr.clear();
-                        System.out.println("Массив удалён");
-                    }
-
-                    break;
-                case (5): // Вывод всех элементов
-                    if (ResumeArr.size != 0 && ResumeArr != null) {
-                        ShowStorage(ResumeArr);
-                    } else {
-                        System.out.println("Массив не создан");
-                    }
-
-                    break;
-
-                case (6): {
-                    choice = 0;
-                    do {
-                        System.out.println("1. Вывести элемент по id\n2. Получить все резюме");
-                        choice = NaturalNumberRange(1, 3);
-                        switch (choice) {
-                            case (1): {
-                                if (ResumeArr.size != 0 && ResumeArr != null) {
-                                    System.out.println("Введите id элемента");
-                                    String id = in.nextLine();
-                                    System.out.println(ResumeArr.get(id).toString());
-                                }
-                            }
-                            break;
-                            case (2): {
-                                if (ResumeArr.size != 0 && ResumeArr != null) {
-                                    Resume[] sw = ResumeArr.getAll();
-                                    System.out.println("Все резюме клонированы в новый массив");
-                                } else {
-                                    System.out.println("Массив не создан");
-                                }
-                            }
-                            break;
-                        }
-                    } while (choice != 3);
-                }
-                break;
+    static void printAll() {
+        Resume[] all = ARRAY_STORAGE.getAll();
+        System.out.println("----------------------------");
+        if (all.length == 0) {
+            System.out.println("Empty");
+        } else {
+            for (Resume r : all) {
+                System.out.println(r);
             }
-        } while (choice != 7);
+        }
+        System.out.println("----------------------------");
     }
 }
-
